@@ -126,6 +126,15 @@ if hasvalue $TIME_FORMAT; then
 		TIME_FORMAT=false
 	fi
 fi
+
+# https://github.com/1technophile/OpenMQTTGateway/issues/1628
+if hasvalue $RANDOM_MACS; then
+	if ! [[ $RANDOM_MACS =~ (true|false) ]]; then
+		echo "WARNING : Wrong value for RANDOM_MACS environment variable, will use default - false"
+		RANDOM_MACS=false
+	fi
+fi
+
 ### Syntax checks - END
 
 cd $VIRTUAL_ENV
@@ -153,7 +162,8 @@ cat <<EOF> $CONFIG
     "scanning_mode": "${SCANNING_MODE:-active}",
     "adapter": "${ADAPTER:-hci0}",
     "time_sync": "${TIME_SYNC:-[]}",
-    "time_format": "${TIME_FORMAT:-0}"
+    "time_format": "${TIME_FORMAT:-0}",
+    "randommacs": ${RANDOM_MACS:-false}
 }
 EOF
 cat $CONFIG
